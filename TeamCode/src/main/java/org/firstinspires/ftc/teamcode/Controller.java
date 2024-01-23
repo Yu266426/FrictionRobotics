@@ -39,8 +39,8 @@ public class Controller extends LinearOpMode {
              */
 
             // Drive Motors
-            float x_input = -gamepad1.left_stick_x;  // Flip controls cause robot was backwards :\
-            float y_input = gamepad1.left_stick_y;
+            float x_input = gamepad1.left_stick_x;
+            float y_input = -gamepad1.left_stick_y;
             float rot_input = gamepad1.right_stick_x;
             transRotWheelController.handleInput(x_input, y_input, rot_input);
 

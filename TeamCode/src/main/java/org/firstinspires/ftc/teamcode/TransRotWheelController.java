@@ -44,10 +44,10 @@ public class TransRotWheelController {
     private float frontLeftWheelPower, frontRightWheelPower, backLeftWheelPower, backRightWheelPower;
 
     TransRotWheelController(float powerScale, float rotPowerScale) {
-        this.frontLeftWheel = new TransRotWheel(-1f, -1f, 1f, powerScale, rotPowerScale);
-        this.frontRightWheel = new TransRotWheel(-1f, -1f, -1f, powerScale, rotPowerScale);
-        this.backLeftWheel = new TransRotWheel(1f, -1f, 1f, powerScale, rotPowerScale);
-        this.backRightWheel = new TransRotWheel(1f, -1f, -1f, powerScale, rotPowerScale);
+        this.frontLeftWheel = new TransRotWheel(1f, 1f, 1f, powerScale, rotPowerScale);
+        this.frontRightWheel = new TransRotWheel(1f, 1f, -1f, powerScale, rotPowerScale);
+        this.backLeftWheel = new TransRotWheel(-1f, 1f, 1f, powerScale, rotPowerScale);
+        this.backRightWheel = new TransRotWheel(-1f, 1f, -1f, powerScale, rotPowerScale);
     }
 
     void handleInput(float x, float y, float rotation) {

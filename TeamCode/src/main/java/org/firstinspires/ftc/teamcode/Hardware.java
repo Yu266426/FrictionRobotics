@@ -27,6 +27,8 @@ public class Hardware {
         frontLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        resetDriveEncoders();
+
         leftSlideMotor = hardwareMap.get(DcMotor.class, "leftSlideMotor");
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         rightSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -47,4 +49,26 @@ public class Hardware {
 //        droneLauncherServo = hardwareMap.get(Servo.class, "droneLauncherServo");
     }
 
+    public static void resetDriveEncoders() {
+        DcMotor.RunMode prevMode = frontLeftDriveMotor.getMode();
+
+        // Reset Wheel Encoders
+        frontLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Revert to previous mode
+        frontLeftDriveMotor.setMode(prevMode);
+        frontRightDriveMotor.setMode(prevMode);
+        backLeftDriveMotor.setMode(prevMode);
+        backRightDriveMotor.setMode(prevMode);
+    }
+
+    public static void setDriveMode(DcMotor.RunMode runMode) {
+        frontLeftDriveMotor.setMode(runMode);
+        frontRightDriveMotor.setMode(runMode);
+        backLeftDriveMotor.setMode(runMode);
+        backRightDriveMotor.setMode(runMode);
+    }
 }
