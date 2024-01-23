@@ -20,7 +20,10 @@ public class Controller extends LinearOpMode {
         GripperController gripperController = new GripperController(0.0f, 0.2f);
 
         Toggle intakeToggle = new Toggle();
+
+        boolean intakeTowardsGripper = true;
         Toggle centralIntakeToggle = new Toggle();
+
         Toggle liftToggle = new Toggle();
 
         telemetry.addData("Status", "Initialized");
@@ -59,7 +62,8 @@ public class Controller extends LinearOpMode {
                 Linear slide: left stick y (left trigger for slightly more power)
                 Linear slide lift: Toggled by `a`
 
-                Central intake: dpad down
+                Central intake towards front: dpad up
+                Central intake towards gripper: dpad down
 
                 Open Gripper: right trigger
              */
@@ -74,7 +78,21 @@ public class Controller extends LinearOpMode {
             }
 
             // Intake
-            centralIntakeToggle.toggle(gamepad2.dpad_down);
+            if (gamepad2.dpad_down) {
+                if (!intakeTowardsGripper) {
+                    intakeTowardsGripper = true;
+                } else {
+                    centralIntakeToggle.toggle(gamepad2.dpad_down);
+                }
+
+            }
+            if (gamepad2.dpad_up) {
+                if (intakeTowardsGripper) {
+                    intakeTowardsGripper = false;
+                } else {
+                    centralIntakeToggle.toggle(gamepad2.dpad_up);
+                }
+            }
 
             // Gripper
             gripperController.getInput(gamepad2.right_trigger < 0.8);
@@ -103,7 +121,12 @@ public class Controller extends LinearOpMode {
             }
 
             if (centralIntakeToggle.on()) {
-                Hardware.centralIntakeServo.setPower(0.8);
+                if (intakeTowardsGripper) {
+                    Hardware.centralIntakeServo.setPower(0.8);
+                } else {
+                    Hardware.centralIntakeServo.setPower(-0.8);
+
+                }
             } else {
                 Hardware.centralIntakeServo.setPower(0.0);
             }
