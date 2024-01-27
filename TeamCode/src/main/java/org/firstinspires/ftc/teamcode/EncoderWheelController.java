@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
-//class EncoderWheel {
-//
-//}
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class EncoderWheelController {
-    private final float encoderCountPerCentimeterForward = 100;
-    private final float encoderCountPerCentimeterSideways = 100;
+    private final float encoderCountPerCentimeterForward = 5000;
+    private final float encoderCountPerCentimeterSideways = 5000;
 
-    private final float encoderCountPer360 = 100;
+    private final float encoderCountPer360Rotation = 100;
 
     private final float motorPower;
 
@@ -66,14 +62,13 @@ public class EncoderWheelController {
             numMotorsFinished += 1;
         }
 
-        // If less than 2 motors are done, keep moving
-        if (numMotorsFinished <= 2) {
-            runMotors();
-            return true;
+        // If more than 2 motors are done, stop
+        if (numMotorsFinished >= 2) {
+            stopMotors();
+            return false;
         }
 
-        stopMotors();
-        return false;
+        return true;
     }
 
     public void addTelemetry(Telemetry telemetry) {
@@ -90,6 +85,7 @@ public class EncoderWheelController {
         this.backRightWheelPos += cmDistance * this.encoderCountPerCentimeterForward;
 
         updateMotorPositions();
+        runMotors();
     }
 
     public void setSidewaysMovement(float cmDistance) {
@@ -99,5 +95,6 @@ public class EncoderWheelController {
         this.backRightWheelPos -= cmDistance * this.encoderCountPerCentimeterSideways;
 
         updateMotorPositions();
+        runMotors();
     }
 }

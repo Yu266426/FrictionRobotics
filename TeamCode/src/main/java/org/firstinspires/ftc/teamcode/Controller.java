@@ -17,7 +17,7 @@ public class Controller extends LinearOpMode {
 
         TransRotWheelController transRotWheelController = new TransRotWheelController(0.5f, 0.5f);
         LinearSlideController slideController = new LinearSlideController(0.0f, 0.8f, 1.5f);
-        GripperController gripperController = new GripperController(0.0f, 0.2f);
+        GripperController gripperController = new GripperController(0.0f, 0.05f);
 
         Toggle intakeToggle = new Toggle();
 
@@ -47,15 +47,6 @@ public class Controller extends LinearOpMode {
             float rot_input = gamepad1.right_stick_x;
             transRotWheelController.handleInput(x_input, y_input, rot_input);
 
-            // Intake
-            intakeToggle.toggle(gamepad1.dpad_left);
-            if (intakeToggle.justToggled()) {
-                if (intakeToggle.on()) {
-                    centralIntakeToggle.turnOn();
-                } else {
-                    centralIntakeToggle.turnOff();
-                }
-            }
 
             // Controller 2
             /*
@@ -78,20 +69,31 @@ public class Controller extends LinearOpMode {
             }
 
             // Intake
-            if (gamepad2.dpad_down) {
-                if (!intakeTowardsGripper) {
+            intakeToggle.toggle(gamepad1.dpad_left || gamepad2.dpad_left);
+            if (intakeToggle.justToggled()) {
+                if (intakeToggle.on()) {
+                    centralIntakeToggle.turnOn();
                     intakeTowardsGripper = true;
                 } else {
-                    centralIntakeToggle.toggle(gamepad2.dpad_down);
+                    centralIntakeToggle.turnOff();
                 }
-
             }
-            if (gamepad2.dpad_up) {
+
+            boolean justSwitched = false;
+            if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 if (intakeTowardsGripper) {
                     intakeTowardsGripper = false;
-                } else {
-                    centralIntakeToggle.toggle(gamepad2.dpad_up);
+                    justSwitched = true;
                 }
+            } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
+                if (!intakeTowardsGripper) {
+                    intakeTowardsGripper = true;
+                    justSwitched = true;
+                }
+            }
+
+            if (!justSwitched) {
+                centralIntakeToggle.toggle(gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_up || gamepad2.dpad_up);
             }
 
             // Gripper
@@ -137,8 +139,13 @@ public class Controller extends LinearOpMode {
 //            telemetry.addData("frw: ", transRotWheelController.getFrontRightWheelPower());
 //            telemetry.addData("blw: ", transRotWheelController.getBackLeftWheelPower());
 //            telemetry.addData("brw: ", transRotWheelController.getBackRightWheelPower());
-//            telemetry.addData("Slide Power:", slideController.getPower());
-//            telemetry.addData("Left Encod", Hardware.leftSlideMotor.getCurrentPosition());
+//            telemetry.addData("flw: ", Hardware.frontLeftDriveMotor.getCurrentPosition());
+//            telemetry.addData("frw: ", Hardware.frontRightDriveMotor.getCurrentPosition());
+//            telemetry.addData("blw: ", Hardware.backLeftDriveMotor.getCurrentPosition());
+//            telemetry.addData("brw: ", Hardware.backRightDriveMotor.getCurrentPosition());
+            telemetry.addData("Slide Power:", slideController.getPower());
+            telemetry.addData("Lifting", liftToggle.on());
+            telemetry.addData("Left Encod", Hardware.leftSlideMotor.getCurrentPosition());
             telemetry.addData("Servo", gripperController.getPos());
             telemetry.addData("Intake:", intakeToggle.on());
             telemetry.addData("Central Intake:", centralIntakeToggle.on());
