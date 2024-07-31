@@ -29,16 +29,19 @@ public class Hardware {
 
         resetDriveEncoders();
 
+        // Slide motors
         leftSlideMotor = hardwareMap.get(DcMotor.class, "leftSlideMotor");
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         rightSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        // Reset slide encoders
         rightSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        // Intakes
         frontIntakeMotor = hardwareMap.get(DcMotor.class, "frontIntakeMotor");
         centralIntakeServo = hardwareMap.get(CRServo.class, "centralIntakeServo");
 
@@ -46,7 +49,7 @@ public class Hardware {
         leftGripperServo = hardwareMap.get(Servo.class, "leftGripperServo");
         rightGripperServo.setDirection(Servo.Direction.REVERSE);
 
-//        droneLauncherServo = hardwareMap.get(Servo.class, "droneLauncherServo");
+        droneLauncherServo = hardwareMap.get(Servo.class, "droneLauncherServo");
     }
 
     public static void resetDriveEncoders() {

@@ -12,6 +12,7 @@ public class Controller extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Hardware.init(hardwareMap);
+        Hardware.droneLauncherServo.setPosition(0.5);
 
         runtime.reset();
 
@@ -37,8 +38,6 @@ public class Controller extends LinearOpMode {
             /*
                 Movement: left stick
                 Rotation: right stick x
-
-                Front intake (and central by extension): dpad left
              */
 
             // Drive Motors
@@ -53,10 +52,9 @@ public class Controller extends LinearOpMode {
                 Linear slide: left stick y (left trigger for slightly more power)
                 Linear slide lift: Toggled by `a`
 
-                Central intake towards front: dpad up
-                Central intake towards gripper: dpad down
-
                 Open Gripper: right trigger
+
+                Launch plane: `y`
              */
 
             // Linear Slide
@@ -68,6 +66,23 @@ public class Controller extends LinearOpMode {
                 slideController.toggleLift();
             }
 
+            // Gripper
+            gripperController.getInput(gamepad2.right_trigger < 0.8);
+
+            // Drone Launcher
+            if (gamepad2.y) {
+                Hardware.droneLauncherServo.setPosition(0.2);
+            } else {
+                Hardware.droneLauncherServo.setPosition(0.5);
+            }
+
+
+            // All Controllers
+            /*
+                Central intake towards front: dpad up
+                Central intake towards gripper: dpad down
+                All intakes towards gripper: dpad right
+             */
             // Intake
             intakeToggle.toggle(gamepad1.dpad_left || gamepad2.dpad_left);
             if (intakeToggle.justToggled()) {
@@ -96,9 +111,6 @@ public class Controller extends LinearOpMode {
                 centralIntakeToggle.toggle(gamepad1.dpad_down || gamepad2.dpad_down || gamepad1.dpad_up || gamepad2.dpad_up);
             }
 
-            // Gripper
-            gripperController.getInput(gamepad2.right_trigger < 0.8);
-
 
             // Set Actuators
             // Drive Motors
@@ -116,17 +128,20 @@ public class Controller extends LinearOpMode {
             Hardware.rightGripperServo.setPosition(gripperController.getPos());
 
             // Intake
-            if (intakeToggle.on()) {
-                Hardware.frontIntakeMotor.setPower(0.5);
+            // Emergency reverse pixel
+            if (gamepad1.dpad_right || gamepad2.dpad_right) {
+                Hardware.frontIntakeMotor.setPower(-1.0);
+            } else if (intakeToggle.on()) {
+                Hardware.frontIntakeMotor.setPower(1.0);
             } else {
                 Hardware.frontIntakeMotor.setPower(0.0);
             }
 
             if (centralIntakeToggle.on()) {
                 if (intakeTowardsGripper) {
-                    Hardware.centralIntakeServo.setPower(0.8);
+                    Hardware.centralIntakeServo.setPower(1.0);
                 } else {
-                    Hardware.centralIntakeServo.setPower(-0.8);
+                    Hardware.centralIntakeServo.setPower(-1.0);
 
                 }
             } else {

@@ -18,10 +18,10 @@ public class LinearSlideController {
     private void restrainPower() {
         this.power = Math.max(-1, Math.min(1, this.power)); // Clamp between -1 and 1
 
-        if (Hardware.leftSlideMotor.getCurrentPosition() > 7750) {
+        if (Hardware.leftSlideMotor.getCurrentPosition() > 7500) {  // Max
             this.power = Math.min(this.power, 0);
         }
-        if (Hardware.leftSlideMotor.getCurrentPosition() < 10) {
+        if (Hardware.leftSlideMotor.getCurrentPosition() < 50) {  // Min
             this.power = Math.max(this.power, 0);
         }
     }
